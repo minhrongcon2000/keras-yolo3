@@ -8,6 +8,7 @@ from tensorflow.keras.layers import Input, Lambda
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
+from wandb.keras import WandbCallback
 
 from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
 from yolo3.utils import get_random_data
@@ -66,7 +67,7 @@ def _main():
             validation_steps=max(1, num_val//batch_size),
             epochs=50,
             initial_epoch=0,
-            callbacks=[logging, checkpoint])
+            callbacks=[logging, checkpoint, WandbCallback()])
         model.save_weights(log_dir + 'trained_weights_stage_1.h5')
 
     # Unfreeze and continue training, to fine-tune.
