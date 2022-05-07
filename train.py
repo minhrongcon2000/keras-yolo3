@@ -18,6 +18,7 @@ import os
 
 
 def _main():
+    os.environ["WANDB_API_KEY"] = "183c1a6a36cbdf0405f5baacb72690845ecc8573"
     annotation_path = 'train_fix.txt'
     log_dir = 'logs/000/'
     classes_path = 'model_data/mask_classes.txt'
