@@ -9,9 +9,12 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from wandb.keras import WandbCallback
+import wandb
 
 from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
 from yolo3.utils import get_random_data
+
+import os
 
 
 def _main():
@@ -49,6 +52,8 @@ def _main():
     np.random.seed(None)
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
+
+    wandb.init(project="masked_face_yolo", name="yolov3")
 
     # Train with frozen layers first, to get a stable loss.
     # Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
@@ -92,6 +97,7 @@ def _main():
             initial_epoch=50,
             callbacks=[logging, checkpoint, reduce_lr, early_stopping, WandbCallback()])
         model.save_weights(log_dir + 'trained_weights_final.h5')
+    wandb.finish()
 
     # Further training if needed.
 
